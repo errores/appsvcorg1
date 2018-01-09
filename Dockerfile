@@ -20,9 +20,9 @@ ENV HTTPD_CONF_FILE "$HTTPD_CONF_DIR/httpd.conf"
 ENV HTTPD_LOG_DIR="/home/LogFiles/httpd"
 ENV PATH "$HTTPD_HOME/bin":$PATH
 
-# mariadb
-ENV MARIADB_DATA_DIR="/home/data/mysql"
-ENV MARIADB_LOG_DIR="/home/LogFiles/mysql"
+
+
+
 
 
 
@@ -131,12 +131,12 @@ RUN set -ex \
 	&& rm $DOCKER_BUILD_HOME/httpd.tar.gz \
 	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $httpdBuildtimeDeps \
 
-	# ------------------------
-	# 3. mariadb
-	# ------------------------
-	&& apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install mariadb-server -y -V --no-install-recommends \
-	&& rm -r /var/lib/apt/lists/* \
+
+
+
+
+
+
 
 
 
