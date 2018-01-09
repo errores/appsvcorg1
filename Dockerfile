@@ -24,22 +24,22 @@ ENV PATH "$HTTPD_HOME/bin":$PATH
 ENV MARIADB_DATA_DIR="/home/data/mysql"
 ENV MARIADB_LOG_DIR="/home/LogFiles/mysql"
 
-# php
-ENV PHP_VERSION "7.1.2"
-ENV PHP_DOWNLOAD_URL "https://secure.php.net/get/php-$PHP_VERSION.tar.gz/from/this/mirror"
-ENV PHP_SHA256 "e6773217c9c719ca22abb104ae3d437d53daceaf31faf2e5eeb1f9f5028005d8"
-ENV PHP_SOURCE "/usr/src/php"
-ENV PHP_HOME "/usr/local/php"
-ENV PHP_CONF_DIR "$PHP_HOME/etc"
-ENV PHP_CONF_DIR_SCAN "$PHP_CONF_DIR/conf.d"
-ENV PATH "$PHP_HOME/bin":$PATH
 
-# phpmyadmin
-ENV PHPMYADMIN_VERSION "4.6.6"
-ENV PHPMYADMIN_DOWNLOAD_URL "https://files.phpmyadmin.net/phpMyAdmin/$PHPMYADMIN_VERSION/phpMyAdmin-$PHPMYADMIN_VERSION-all-languages.tar.gz"
-ENV PHPMYADMIN_SHA256 "54086600558613b31c4daddf4ae58fbc1c252a2b8e3e6fae12f851f78677d72e"
-ENV PHPMYADMIN_SOURCE "/usr/src/phpmyadmin"
-ENV PHPMYADMIN_HOME "/home/phpmyadmin"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ssh
 ENV SSH_PASSWD "root:Docker!"
@@ -138,86 +138,86 @@ RUN set -ex \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install mariadb-server -y -V --no-install-recommends \
 	&& rm -r /var/lib/apt/lists/* \
 
-	# ------------------------
-	# 4. php
-	# ------------------------
-	### see http://php.net/manual/en/install.unix.apache2.php
-	### see http://linuxfromscratch.org/blfs/view/svn/general/php.html
-	&& mkdir -p $PHP_SOURCE \
-	&& mkdir -p $PHP_HOME \
-	## buildtime deps
-	&& phpBuildtimeDeps="\
-		libbz2-dev \
-		libgmp-dev \
-		libicu-dev \
-		libjpeg-dev \
-		libpng12-dev \
-		libldap2-dev \
-		libmcrypt-dev \
-		libmhash-dev \
-		libssl-dev \
-		libxml2-dev \
-		libxslt-dev \
-	" \
-	## runtime deps
-	&& phpRuntimeDeps=" \
-		libcurl4-openssl-dev \
-		libjpeg8 \
-		libpng12-0 \
-		libmcrypt4 \
-		libxml2 \
-		libxslt1.1 \
-	" \
-	&& apt-get update \
-	&& apt-get install -y -V --no-install-recommends $phpBuildtimeDeps $phpRuntimeDeps \	
-	&& rm -rf /var/lib/apt/lists/* \
-	&& ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
-	&& ln -s /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/libldap.so \
-	&& ln -s /usr/lib/x86_64-linux-gnu/liblber.so /usr/lib/liblber.so \
-	## download, validate, extract
-	&& cd $DOCKER_BUILD_HOME \
-	&& wget -O php.tar.gz "$PHP_DOWNLOAD_URL" --no-check-certificate \
-	&& echo "$PHP_SHA256 *php.tar.gz" | sha256sum -c - \
-	&& tar -xf php.tar.gz -C $PHP_SOURCE --strip-components=1 \	
-	## configure, make, install
-	&& cd $PHP_SOURCE \
-	&& ./configure \
-		--prefix=$PHP_HOME \
-		### we don't need CGI version of PHP here
-		--disable-cgi \
-		--enable-bcmath \
-		--enable-intl \
-		--enable-ftp \
-		--enable-mbstring \
-		--enable-soap \
-		--enable-zip \
-		--with-apxs2=$HTTPD_HOME/bin/apxs \
-		--with-bz2 \
-		--with-config-file-path=$PHP_CONF_DIR \
-		--with-config-file-scan-dir=$PHP_CONF_DIR_SCAN \
-		--with-curl \
-		--with-gd \
-		--with-jpeg-dir \
-		--with-png-dir \
-		--with-gmp \
-		--with-ldap \
-		--with-mcrypt \
-		--with-mhash \
-		### for phpmyadmin
-		--with-mysqli=mysqlnd \
-		--with-openssl \
-		### see http://php.net/manual/en/mysqlinfo.library.choosing.php
-		--with-pdo-mysql=mysqlnd \
-		--with-xsl \
-		--with-zlib \
-	&& make -j "$(nproc)" \
-	&& make install \
-	&& make clean \
-	## clean up
-	&& rm -rf $PHP_SOURCE \
-	&& rm -rf $PHP_HOME/php/man \
-	&& rm $DOCKER_BUILD_HOME/php.tar.gz \
-	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $phpBuildtimeDeps \
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
