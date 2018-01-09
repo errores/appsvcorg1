@@ -77,9 +77,9 @@ RUN set -ex \
 	&& apt-get install -y -V --no-install-recommends $tools \
 	&& rm -r /var/lib/apt/lists/* \
 
-	# -------------
+	# ------------------------
 	# 1. essentials
-	# -------------
+	# ------------------------
 	&& essentials=" \
 		ca-certificates \
 	" \
@@ -87,9 +87,9 @@ RUN set -ex \
 	&& apt-get install -y -V --no-install-recommends $essentials \
 	&& rm -r /var/lib/apt/lists/* \
 
-	# ---------------
+	# ------------------------
 	# 2. apache httpd
-	# ---------------
+	# ------------------------
 	&& mkdir -p $HTTPD_SOURCE \
 	&& mkdir -p $HTTPD_HOME \
 	## runtime and buildtime deps
@@ -131,16 +131,16 @@ RUN set -ex \
 	&& rm $DOCKER_BUILD_HOME/httpd.tar.gz \
 	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $httpdBuildtimeDeps \
 
-	# ----------
+	# ------------------------
 	# 3. mariadb
-	# ----------
+	# ------------------------
 	&& apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install mariadb-server -y -V --no-install-recommends \
 	&& rm -r /var/lib/apt/lists/* \
 
-	# ------
+	# ------------------------
 	# 4. php
-	# ------
+	# ------------------------
 	### see http://php.net/manual/en/install.unix.apache2.php
 	### see http://linuxfromscratch.org/blfs/view/svn/general/php.html
 	&& mkdir -p $PHP_SOURCE \
@@ -219,24 +219,24 @@ RUN set -ex \
 	&& rm $DOCKER_BUILD_HOME/php.tar.gz \
 	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $phpBuildtimeDeps \
 
-	# -------------
-	# 5. phpmyadmin
-	# -------------
-	&& mkdir -p $PHPMYADMIN_SOURCE \
-	&& cd $PHPMYADMIN_SOURCE \
-	&& wget -O phpmyadmin.tar.gz "$PHPMYADMIN_DOWNLOAD_URL" --no-check-certificate \
-	&& echo "$PHPMYADMIN_SHA256 *phpmyadmin.tar.gz" | sha256sum -c - \
 
-	# ------
+
+
+
+
+
+
+
+	# ------------------------
 	# 6. ssh
-	# ------
+	# ------------------------
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends openssh-server \
 	&& echo "$SSH_PASSWD" | chpasswd \
 
-	# -----------
+	# ------------------------
 	# ~. clean up
-	# -----------
+	# ------------------------
 	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $tools \
 	&& apt-get autoremove -y	
 
@@ -245,37 +245,37 @@ RUN set -ex \
 # Configure
 # =========
 
-# httpd
-COPY httpd.conf $HTTPD_CONF_DIR/
-COPY httpd-modules.conf $HTTPD_CONF_DIR/
-COPY httpd-php.conf $HTTPD_CONF_DIR/
-# php
-COPY php.ini $PHP_CONF_DIR/
-COPY php-opcache.ini $PHP_CONF_DIR_SCAN/
-# phpmyadmin
-COPY httpd-phpmyadmin.conf $HTTPD_CONF_DIR/
-COPY phpmyadmin-config.inc.php $PHPMYADMIN_SOURCE/
-COPY mariadb.cnf /etc/mysql/
+
+
+
+
+
+
+
+
+
+
+
 # ssh
 COPY sshd_config /etc/ssh/
 
-RUN set -ex \
-	&& echo 'Include conf/httpd-php.conf' >> $HTTPD_CONF_FILE \
-	&& test ! -d /var/lib/php/sessions && mkdir -p /var/lib/php/sessions \
-	&& chown www-data:www-data /var/lib/php/sessions \
-	##
-	&& test ! -d /var/www && mkdir -p /var/www \
-	&& chown -R www-data:www-data /var/www \
-	##
-	&& rm -rf /var/log/httpd \
-	&& ln -s $HTTPD_LOG_DIR /var/log/httpd \
-	##
-	&& rm -rf /var/log/mysql \
-	&& ln -s $MARIADB_LOG_DIR /var/log/mysql \
-	##
-	&& ln -s $PHPMYADMIN_HOME /var/www/phpmyadmin \
-	##
-	&& ln -s $APP_HOME /var/www/wwwroot 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # =====
 # final
