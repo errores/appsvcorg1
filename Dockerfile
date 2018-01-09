@@ -1,4 +1,4 @@
-##
+#
 # Dockerfile for Apache/PHP/MySQL
 #
 FROM ubuntu:16.04
@@ -87,49 +87,49 @@ RUN set -ex \
 	&& apt-get install -y -V --no-install-recommends $essentials \
 	&& rm -r /var/lib/apt/lists/* \
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		# ------------------------
+	# 2. apache httpd
+	# ------------------------
+	&& mkdir -p $HTTPD_SOURCE \
+	&& mkdir -p $HTTPD_HOME \
+	## runtime and buildtime deps
+	&& httpdBuildtimeDeps=" \
+		libpcre++-dev \
+		libssl-dev \
+	" \
+	&& httpdRuntimeDeps="\
+		libapr1 \
+		libaprutil1 \
+		libaprutil1-ldap \
+		libapr1-dev \
+		libaprutil1-dev \
+	" \
+	&& apt-get update \
+	&& apt-get install -y -V --no-install-recommends $httpdBuildtimeDeps $httpdRuntimeDeps \		
+	&& rm -r /var/lib/apt/lists/* \
+	## download, validate, extract
+	&& cd $DOCKER_BUILD_HOME \
+	&& wget -O httpd.tar.gz "$HTTPD_DOWNLOAD_URL" --no-check-certificate \
+	&& echo "$HTTPD_SHA1 *httpd.tar.gz" | sha1sum -c - \
+	&& tar -xf httpd.tar.gz -C $HTTPD_SOURCE --strip-components=1 \
+	## configure, make, install
+	&& cd $HTTPD_SOURCE \
+	&& ./configure \
+		--prefix=$HTTPD_HOME \
+		### using prefork for PHP. see http://php.net/manual/en/install.unix.apache2.php
+		--with-mpm=prefork \
+		--enable-mods-shared=reallyall \
+		--enable-ssl \
+		--enable-deflate \
+	&& make -j "$(nproc)" \
+	&& make install \
+	&& make clean \
+	## clean up
+	&& rm -rf $HTTPD_SOURCE \
+		$HTTPD_HOME/man \
+		$HTTPD_HOME/manual \
+	&& rm $DOCKER_BUILD_HOME/httpd.tar.gz \
+	&& apt-get purge -y -V -o APT::AutoRemove::RecommendsImportant=false --auto-remove $httpdBuildtimeDeps \
 
 
 
