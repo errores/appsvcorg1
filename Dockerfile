@@ -2,7 +2,7 @@
 # Dockerfile for Apache/PHP/MySQL
 #
 FROM ubuntu:16.04
-MAINTAINER Azure App Service Container Images <appsvc-images@microsoft.com>
+MAINTAINER imagenes <a@gmail.com>
 
 
 # ========
@@ -245,37 +245,11 @@ RUN set -ex \
 # Configure
 # =========
 
-# httpd
-COPY httpd.conf $HTTPD_CONF_DIR/
-COPY httpd-modules.conf $HTTPD_CONF_DIR/
-COPY httpd-php.conf $HTTPD_CONF_DIR/
-# php
-COPY php.ini $PHP_CONF_DIR/
-COPY php-opcache.ini $PHP_CONF_DIR_SCAN/
-# phpmyadmin
-COPY httpd-phpmyadmin.conf $HTTPD_CONF_DIR/
-COPY phpmyadmin-config.inc.php $PHPMYADMIN_SOURCE/
-COPY mariadb.cnf /etc/mysql/
+
 # ssh
 COPY sshd_config /etc/ssh/
 
-RUN set -ex \
-	&& echo 'Include conf/httpd-php.conf' >> $HTTPD_CONF_FILE \
-	&& test ! -d /var/lib/php/sessions && mkdir -p /var/lib/php/sessions \
-	&& chown www-data:www-data /var/lib/php/sessions \
-	##
-	&& test ! -d /var/www && mkdir -p /var/www \
-	&& chown -R www-data:www-data /var/www \
-	##
-	&& rm -rf /var/log/httpd \
-	&& ln -s $HTTPD_LOG_DIR /var/log/httpd \
-	##
-	&& rm -rf /var/log/mysql \
-	&& ln -s $MARIADB_LOG_DIR /var/log/mysql \
-	##
-	&& ln -s $PHPMYADMIN_HOME /var/www/phpmyadmin \
-	##
-	&& ln -s $APP_HOME /var/www/wwwroot 
+
 
 # =====
 # final
