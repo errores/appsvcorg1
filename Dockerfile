@@ -9,16 +9,16 @@ MAINTAINER a <a@gmail.com>
 # ENV vars
 # ========
 
-# apache httpd
-ENV HTTPD_VERSION "2.4.25"
-ENV HTTPD_DOWNLOAD_URL "http://archive.apache.org/dist/httpd/httpd-$HTTPD_VERSION.tar.gz"
-ENV HTTPD_SHA1 "377c62dc6b25c9378221111dec87c28f8fe6ac69"
-ENV HTTPD_SOURCE "/usr/src/httpd"
-ENV HTTPD_HOME "/usr/local/httpd"
-ENV HTTPD_CONF_DIR "$HTTPD_HOME/conf"
-ENV HTTPD_CONF_FILE "$HTTPD_CONF_DIR/httpd.conf"
-ENV HTTPD_LOG_DIR="/home/LogFiles/httpd"
-ENV PATH "$HTTPD_HOME/bin":$PATH
+
+
+
+
+
+
+
+
+
+
 
 
 
