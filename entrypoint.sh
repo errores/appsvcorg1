@@ -93,7 +93,7 @@ chown -R www-data:www-data $APP_HOME
 
 test ! -d "$HTTPD_LOG_DIR" && echo "INFO: $HTTPD_LOG_DIR not found. creating ..." && mkdir -p "$HTTPD_LOG_DIR"
 chown -R www-data:www-data $HTTPD_LOG_DIR
-# apachectl start
+ apachectl start
 
 update_settings
 
@@ -125,9 +125,9 @@ else
 	fi
 fi
 
-# apachectl stop
+apachectl stop
 # delay 2 seconds to try to avoid "httpd (pid XX) already running"
 sleep 2s
 
 echo "Starting Apache httpd -D FOREGROUND ..."
-# apachectl start -D FOREGROUND
+apachectl start -D FOREGROUND
